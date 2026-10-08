@@ -1,0 +1,17 @@
+{
+  "name": "@demo/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'Types have no runtime tests'"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

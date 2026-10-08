@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Daybreak",
+    "slug": "daybreak-weather",
+    "scheme": "daybreak",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": true }
+  }
+}
