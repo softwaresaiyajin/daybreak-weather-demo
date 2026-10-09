@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -12,68 +11,22 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import type { WeatherForecast, WeatherLocation } from "@demo/types";
 import { weatherDescription, weatherIcon } from "@demo/utils";
-import { api } from "../lib/api";
-
-const homeLocation: WeatherLocation = {
-  id: 0,
-  name: "Manila",
-  admin1: "Metro Manila",
-  country: "Philippines",
-  country_code: "PH",
-  latitude: 14.5995,
-  longitude: 120.9842,
-  timezone: "Asia/Manila",
-};
+import { useWeather } from "../hooks/use-weather";
 
 export default function Home() {
-  const [location, setLocation] = useState(homeLocation);
-  const [forecast, setForecast] = useState<WeatherForecast | null>(null);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<WeatherLocation[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-
-  async function loadForecast(place = location) {
-    setBusy(true);
-    setError("");
-    try {
-      setForecast(await api.forecast(place));
-    } catch (cause) {
-      setError((cause as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadForecast(homeLocation);
-  }, []);
-
-  async function search() {
-    if (query.trim().length < 2) return;
-    setBusy(true);
-    setError("");
-    try {
-      const matches = await api.searchLocations(query.trim());
-      setResults(matches);
-      setShowResults(true);
-      if (!matches.length) setError("No places found. Try another city.");
-    } catch (cause) {
-      setError((cause as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function choose(place: WeatherLocation) {
-    setLocation(place);
-    setQuery(place.name);
-    setShowResults(false);
-    void loadForecast(place);
-  }
+  const {
+    busy,
+    chooseLocation,
+    error,
+    forecast,
+    loadForecast,
+    query,
+    results,
+    search,
+    setQuery,
+    showResults,
+  } = useWeather();
 
   return (
     <SafeAreaView style={s.safe}>
@@ -126,7 +79,7 @@ export default function Home() {
                 <Pressable
                   key={place.id}
                   style={s.resultRow}
-                  onPress={() => choose(place)}
+                  onPress={() => chooseLocation(place)}
                 >
                   <Text style={s.resultName}>
                     {place.name}
